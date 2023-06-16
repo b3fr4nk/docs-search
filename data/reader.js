@@ -1,11 +1,10 @@
 const fs = require('fs');
 
 module.exports = (doc) => {
-  fs.readFile(doc, 'utf8', (err, data) => {
-    if (err) {
-      console.log(err);
-      return;
-    }
+  try {
+    const data = fs.readFileSync(doc, 'utf8');
     return data;
-  });
+  } catch (err) {
+    console.log(err);
+  };
 };
