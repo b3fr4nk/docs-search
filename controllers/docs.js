@@ -1,6 +1,7 @@
 /* eslint-disable new-cap */
 const multer = require('multer');
 const db = require('../data/db');
+const reader = require('../data/reader');
 const upload = multer({dest: 'uploads/'});
 
 module.exports = (app) => {
@@ -11,7 +12,10 @@ module.exports = (app) => {
   app.post('/docs/upload', upload.single('doc'), (req, res) => {
     if (req.file) {
       console.log('file uploaded');
-      db.upsert(req.file.path);
+      const doc = reader(req.file.path);
+      doc.forEach((str) => {
+        db.upsert(str);
+      });
     }
     res.redirect('/');
   });
