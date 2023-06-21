@@ -15,7 +15,6 @@ module.exports = (app) => {
   });
   app.post('/docs/upload', upload.single('doc'), (req, res) => {
     if (req.file) {
-      console.log(req.file.path);
       const doc = reader(req.file.path);
       for (let i = 1; i < doc.length; i++) {
         db.upsert(doc[i], `${req.file.path}-${i}`);
@@ -30,7 +29,6 @@ module.exports = (app) => {
   });
 
   app.post('/docs/search', (req, res) => {
-    // console.log(req.body.search);
     db.query(req.body.search)
         .then(
             function(value) {
@@ -38,7 +36,6 @@ module.exports = (app) => {
               for (let i = 0; i < value.matches.length; i++) {
                 results.push(value.matches[i].metadata.text);
               }
-              console.log(results);
               res.render('search.handlebars', {results});
             },
             function(error) {
