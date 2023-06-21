@@ -12,22 +12,22 @@ const init = async () => {
   return pinecone;
 };
 
-const upsert = async (doc) => {
+const upsert = async (str, id) => {
   pinecone = await init();
   // eslint-disable-next-line new-cap
   const index = pinecone.Index('docs-search');
 
-  const str = reader(doc);
   const data = await tokenize(str);
   console.log(data);
 
   const upsertRequest = {
     vectors: [
       {
-        id: doc,
+        id: id,
         values: data,
         metadata: {
-          filepath: doc,
+          text: str,
+          filepath: id,
         },
       },
     ],
@@ -38,4 +38,25 @@ const upsert = async (doc) => {
   // console.log(upsertResponse);
 };
 
-module.exports = {upsert, init};
+const query = async (query) => {
+  pinecone = await init();
+  // eslint-disable-next-line new-cap
+  const index = pinecone.Index('docs-search');
+
+  const vector = await tokenize(query);
+  // console.log(vector);
+
+  const queryRequest = {
+    vector: vector,
+    topK: 3,
+    includeValues: true,
+    includeMetadata: true,
+    namespace: '',
+  };
+
+  const queryResponse = await index.query({queryRequest: queryRequest});
+  // console.log(queryResponse.matches);
+  return queryResponse;
+};
+
+module.exports = {upsert, query, init};

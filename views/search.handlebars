@@ -1,0 +1,10 @@
+<form action="/docs/search" method="post">
+  <input type="text" name="search" id="search">
+  <button>Search</button>
+  <ul>
+    
+    {{#each results}}
+      <li>{{this}}</li>
+    {{/each}}
+  </ul>
+</form>
