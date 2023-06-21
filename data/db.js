@@ -18,7 +18,6 @@ const upsert = async (str, id) => {
   const index = pinecone.Index('docs-search');
 
   const data = await tokenize(str);
-  console.log(data);
 
   const upsertRequest = {
     vectors: [
@@ -35,7 +34,6 @@ const upsert = async (str, id) => {
   };
 
   const upsertResponse = await index.upsert({upsertRequest: upsertRequest});
-  // console.log(upsertResponse);
 };
 
 const query = async (query) => {
@@ -44,7 +42,6 @@ const query = async (query) => {
   const index = pinecone.Index('docs-search');
 
   const vector = await tokenize(query);
-  // console.log(vector);
 
   const queryRequest = {
     vector: vector,
@@ -55,7 +52,6 @@ const query = async (query) => {
   };
 
   const queryResponse = await index.query({queryRequest: queryRequest});
-  // console.log(queryResponse.matches);
   return queryResponse;
 };
 
