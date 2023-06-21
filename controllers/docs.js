@@ -5,8 +5,12 @@ const reader = require('../data/reader');
 const upload = multer({dest: 'uploads/'});
 
 module.exports = (app) => {
-  // Upload
+  // index
   app.get('/', (req, res) => {
+    res.render('index.handlebars');
+  });
+  // Upload
+  app.get('/docs/upload', (req, res) => {
     res.render('upload.handlebars');
   });
   app.post('/docs/upload', upload.single('doc'), (req, res) => {
@@ -17,7 +21,7 @@ module.exports = (app) => {
         db.upsert(doc[i], `${req.file.path}-${i}`);
       };
     }
-    res.redirect('/search');
+    res.redirect('/docs/search');
   });
 
   // Search
