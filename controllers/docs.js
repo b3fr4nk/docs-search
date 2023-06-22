@@ -32,9 +32,12 @@ module.exports = (app) => {
     db.query(req.body.search)
         .then(
             function(value) {
-              results = [];
+              const results = [];
               for (let i = 0; i < value.matches.length; i++) {
-                results.push(value.matches[i].metadata.text);
+                // TODO make the link to the doc work
+                const text = value.matches[i].metadata.text;
+                const path = value.matches[i].metadata.filepath.split('-')[0];
+                results.push({text: text, path: path});
               }
               res.render('search.handlebars', {results});
             },
