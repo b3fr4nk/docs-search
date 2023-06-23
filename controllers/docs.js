@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable new-cap */
 const multer = require('multer');
 const db = require('../data/db');
@@ -23,6 +24,15 @@ module.exports = (app) => {
     res.redirect('/docs/search');
   });
 
+  app.get('/docs/document/:id', (req, res) => {
+    if (req.params.id) {
+      const text = reader(`./uploads/${req.params.id}`);
+
+      res.render('doc.handlebars', {text});
+    }
+    return res.status(404);
+  });
+
   // Search
   app.get('/docs/search', (req, res) => {
     res.render('search.handlebars');
@@ -36,8 +46,9 @@ module.exports = (app) => {
               for (let i = 0; i < value.matches.length; i++) {
                 // TODO make the link to the doc work
                 const text = value.matches[i].metadata.text;
-                const path = value.matches[i].metadata.filepath.split('-')[0];
-                results.push({text: text, path: path});
+                const file = value.matches[i].metadata.filepath.split('/')[1].split('-')[0];
+                console.log(file);
+                results.push({text: text, path: `/docs/document/${file}`});
               }
               res.render('search.handlebars', {results});
             },
