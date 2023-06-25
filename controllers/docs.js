@@ -47,8 +47,7 @@ module.exports = (app) => {
                 // TODO make the link to the doc work
                 const text = value.matches[i].metadata.text;
                 const file = value.matches[i].metadata.filepath.split('/')[1].split('-')[0];
-                console.log(file);
-                results.push({text: text, path: `/docs/document/${file}`});
+                results.push({text: text, path: `/docs/document/${file}`, index: i+1});
               }
               res.render('search.handlebars', {results});
             },
