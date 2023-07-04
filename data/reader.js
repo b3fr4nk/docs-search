@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 module.exports = (doc) => {
-  const sentences = 3;
+  const sentences = 2;
   const overlap = 1;
   try {
     let str = fs.readFileSync(doc, 'utf8');
