@@ -15,15 +15,12 @@ module.exports = (app) => {
     res.render('upload.handlebars');
   });
   app.post('/docs/upload', upload.single('doc'), (req, res) => {
-    const start = Date.now();
     if (req.file) {
       const doc = reader(req.file.path);
       for (let i = 1; i < doc.length; i++) {
         db.upsert(doc[i], `${req.file.path}-${i}`);
       };
     }
-    const end = Date.now();
-    console.log(`Upload time: ${end - start}ms`);
     res.redirect('/docs/search');
   });
 
@@ -53,13 +50,13 @@ module.exports = (app) => {
                 const file = value.matches[i].metadata.filepath.split('/')[1].split('-')[0];
                 results.push({text: text, path: `/docs/document/${file}`, index: i+1});
               }
+              const end = Date.now();
+              console.log(`Query time: ${end - start}ms`);
               res.render('search.handlebars', {results});
             },
             function(error) {
               console.log(error);
             },
         );
-    const end = Date.now();
-    console.log(`Query time: ${end - start}ms`);
   });
 };

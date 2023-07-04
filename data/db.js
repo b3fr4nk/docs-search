@@ -13,6 +13,7 @@ const init = async () => {
 };
 
 const upsert = async (str, id) => {
+  const start = Date.now();
   pinecone = await init();
   // eslint-disable-next-line new-cap
   const index = pinecone.Index('docs-search');
@@ -30,10 +31,13 @@ const upsert = async (str, id) => {
         },
       },
     ],
-    namespace: 'testing',
+    namespace: 'test-2+1',
   };
 
   const upsertResponse = await index.upsert({upsertRequest: upsertRequest});
+  const end = Date.now();
+  console.log(`Upload time: ${end - start}ms`);
+  return upsertResponse;
 };
 
 const query = async (query) => {
@@ -48,10 +52,11 @@ const query = async (query) => {
     topK: 3,
     includeValues: true,
     includeMetadata: true,
-    namespace: 'testing',
+    namespace: 'testing-4+1',
   };
 
   const queryResponse = await index.query({queryRequest: queryRequest});
+  console.log(queryResponse);
   return queryResponse;
 };
 
