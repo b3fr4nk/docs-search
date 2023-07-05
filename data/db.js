@@ -31,13 +31,12 @@ const upsert = async (str, id) => {
         },
       },
     ],
-    namespace: 'test-2+1',
+    namespace: 'testing-2+1',
   };
 
   const upsertResponse = await index.upsert({upsertRequest: upsertRequest});
   const end = Date.now();
-  console.log(`Upload time: ${end - start}ms`);
-  return upsertResponse;
+  return end - start;
 };
 
 const query = async (query) => {
@@ -52,7 +51,7 @@ const query = async (query) => {
     topK: 3,
     includeValues: true,
     includeMetadata: true,
-    namespace: 'testing-4+1',
+    namespace: 'testing-2+1',
   };
 
   const queryResponse = await index.query({queryRequest: queryRequest});

@@ -17,8 +17,16 @@ module.exports = (app) => {
   app.post('/docs/upload', upload.single('doc'), (req, res) => {
     if (req.file) {
       const doc = reader(req.file.path);
+      let time = 0;
       for (let i = 1; i < doc.length; i++) {
-        db.upsert(doc[i], `${req.file.path}-${i}`);
+        db.upsert(doc[i], `${req.file.path}-${i}`)
+            .then(function(value) {
+              time += value;
+              console.log(time);
+            },
+            function(error) {
+              console.log(error);
+            });
       };
     }
     res.redirect('/docs/search');
