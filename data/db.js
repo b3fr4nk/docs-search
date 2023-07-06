@@ -12,26 +12,27 @@ const init = async () => {
   return pinecone;
 };
 
-const upsert = async (str, id) => {
+const upsert = async (str, str2, id) => {
   const start = Date.now();
   pinecone = await init();
   // eslint-disable-next-line new-cap
-  const index = pinecone.Index('docs-search');
+  const index = pinecone.Index('docs-search-x2');
 
   const data = await tokenize(str);
+  const data2 = await tokenize(str2);
 
   const upsertRequest = {
     vectors: [
       {
         id: id,
-        values: data,
+        values: data.concat(data2),
         metadata: {
           text: str,
           filepath: id,
         },
       },
     ],
-    namespace: 'testing-2+1',
+    namespace: 'testing-3+1-x2',
   };
 
   const upsertResponse = await index.upsert({upsertRequest: upsertRequest});
@@ -42,16 +43,19 @@ const upsert = async (str, id) => {
 const query = async (query) => {
   pinecone = await init();
   // eslint-disable-next-line new-cap
-  const index = pinecone.Index('docs-search');
+  const index = pinecone.Index('docs-search-x2');
+  const query1 = query.slice(0, query.length/2);
+  const query2 = query.slice(query.length/2);
 
-  const vector = await tokenize(query);
+  const vector1 = await tokenize(query1);
+  const vector2 = await tokenize(query2);
 
   const queryRequest = {
-    vector: vector,
+    vector: vector1.concat(vector2),
     topK: 3,
     includeValues: true,
     includeMetadata: true,
-    namespace: 'testing-2+1',
+    namespace: 'testing-3+1-x2',
   };
 
   const queryResponse = await index.query({queryRequest: queryRequest});

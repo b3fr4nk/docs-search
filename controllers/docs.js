@@ -18,8 +18,8 @@ module.exports = (app) => {
     if (req.file) {
       const doc = reader(req.file.path);
       let time = 0;
-      for (let i = 1; i < doc.length; i++) {
-        db.upsert(doc[i], `${req.file.path}-${i}`)
+      for (let i = 1; i < doc.length; i+=2) {
+        db.upsert(doc[i-1], doc[i], `${req.file.path}-${i}`)
             .then(function(value) {
               time += value;
               console.log(time);
